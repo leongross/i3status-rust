@@ -366,6 +366,32 @@
 <span id="366">366</span>
 <span id="367">367</span>
 <span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Monitor Bluetooth device
 //!
 //! This block displays the connectivity of a given Bluetooth device and the battery level if this
@@ -392,6 +418,10 @@
 //! `percentage` | Device&#39;s battery level (may be absent if the device is not supported) | Number | %
 //! `available`  | Present if the device is available                                    | Flag   | -
 //!
+//! Action   | Default button
+//! ---------|---------------
+//! `toggle` | Right
+//!
 //! # Examples
 //!
 //! This example just shows the icon when device is connected.
@@ -412,7 +442,7 @@
 //! - `bluetooth` for all other devices
 
 </span><span class="kw">use </span><span class="kw">super</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span>zbus::fdo::{ObjectManagerProxy, PropertiesProxy};
+<span class="kw">use </span>zbus::fdo::{DBusProxy, ObjectManagerProxy, PropertiesProxy};
 
 <span class="macro">make_log_macro!</span>(debug, <span class="string">&quot;bluetooth&quot;</span>);
 
@@ -428,6 +458,9 @@
 }
 
 <span class="kw">pub async fn </span>run(config: Config, <span class="kw-2">mut </span>api: CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    api.set_default_actions(<span class="kw-2">&amp;</span>[(MouseButton::Right, <span class="prelude-val">None</span>, <span class="string">&quot;toggle&quot;</span>)])
+        .<span class="kw">await</span><span class="question-mark">?</span>;
+
     <span class="kw">let </span>format = config.format.with_default(<span class="string">&quot; $icon $name{ $percentage|} &quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>disconnected_format = config
         .disconnected_format
@@ -479,8 +512,8 @@
                     res<span class="question-mark">?</span>;
                     <span class="kw">break</span>;
                 },
-                event = api.event() =&gt; <span class="kw">if let </span>Click(click) = event {
-                    <span class="kw">if </span>click.button == MouseButton::Right {
+                event = api.event() =&gt; <span class="kw">match </span>event {
+                    Action(a) <span class="kw">if </span>a == <span class="string">&quot;toggle&quot; </span>=&gt; {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(dev) = <span class="kw-2">&amp;</span>monitor.device {
                             <span class="kw">if let </span><span class="prelude-val">Ok</span>(connected) = dev.connected().<span class="kw">await </span>{
                                 <span class="kw">if </span>connected {
@@ -491,6 +524,7 @@
                             }
                         }
                     }
+                    <span class="kw">_ </span>=&gt; (),
                 }
             }
         }
@@ -562,11 +596,20 @@
                     .receive_properties_changed()
                     .<span class="kw">await
                     </span>.error(<span class="string">&quot;Failed to receive updates&quot;</span>)<span class="question-mark">?</span>;
+
                 <span class="kw">let </span><span class="kw-2">mut </span>interface_removed = <span class="self">self
                     </span>.manager_proxy
                     .receive_interfaces_removed()
                     .<span class="kw">await
                     </span>.error(<span class="string">&quot;Failed to monitor interfaces&quot;</span>)<span class="question-mark">?</span>;
+
+                <span class="kw">let </span><span class="kw-2">mut </span>bluez_owner_changed = DBusProxy::new(<span class="self">self</span>.manager_proxy.connection())
+                    .<span class="kw">await
+                    </span>.error(<span class="string">&quot;Failed to create DBusProxy&quot;</span>)<span class="question-mark">?
+                    </span>.receive_name_owner_changed_with_args(<span class="kw-2">&amp;</span>[(<span class="number">0</span>, <span class="string">&quot;org.bluez&quot;</span>)])
+                    .<span class="kw">await
+                    </span>.unwrap();
+
                 <span class="kw">loop </span>{
                     <span class="macro">select! </span>{
                         <span class="kw">_ </span>= updates.next() =&gt; {
@@ -584,7 +627,15 @@
                                 <span class="macro">debug!</span>(<span class="string">&quot;Device is no longer available&quot;</span>);
                                 <span class="kw">return </span><span class="prelude-val">Ok</span>(());
                             }
-                        },
+                        }
+                        <span class="prelude-val">Some</span>(event) = bluez_owner_changed.next() =&gt; {
+                            <span class="kw">let </span>args = event.args().error(<span class="string">&quot;Failed to get the args&quot;</span>)<span class="question-mark">?</span>;
+                            <span class="kw">if </span>args.new_owner.is_none() {
+                                <span class="self">self</span>.device = <span class="prelude-val">None</span>;
+                                <span class="macro">debug!</span>(<span class="string">&quot;org.bluez disappeared&quot;</span>);
+                                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                            }
+                        }
                     }
                 }
             }
@@ -598,14 +649,20 @@
         mac: <span class="kw-2">&amp;</span>str,
         adapter_mac: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>&gt;&gt; {
-        <span class="kw">let </span>root_object: String = <span class="kw">match </span>adapter_mac {
+        <span class="kw">let </span><span class="prelude-val">Ok</span>(devices) = manager_proxy
+            .get_managed_objects()
+            .<span class="kw">await
+        else </span>{
+            <span class="macro">debug!</span>(<span class="string">&quot;could not get the list of managed objects&quot;</span>);
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+        };
+
+        <span class="macro">debug!</span>(<span class="string">&quot;all managed devices: {:?}&quot;</span>, devices);
+
+        <span class="kw">let </span>root_object: <span class="prelude-ty">Option</span>&lt;String&gt; = <span class="kw">match </span>adapter_mac {
             <span class="prelude-val">Some</span>(adapter_mac) =&gt; {
-                <span class="kw">let </span>adapters = manager_proxy
-                    .get_managed_objects()
-                    .<span class="kw">await
-                    </span>.error(<span class="string">&quot;Failed to get a list of adapters&quot;</span>)<span class="question-mark">?</span>;
                 <span class="kw">let </span><span class="kw-2">mut </span>adapter_path = <span class="prelude-val">None</span>;
-                <span class="kw">for </span>(path, interfaces) <span class="kw">in </span>adapters {
+                <span class="kw">for </span>(path, interfaces) <span class="kw">in </span><span class="kw-2">&amp;</span>devices {
                     <span class="kw">let </span>adapter_interface = <span class="kw">match </span>interfaces.get(<span class="string">&quot;org.bluez.Adapter1&quot;</span>) {
                         <span class="prelude-val">Some</span>(i) =&gt; i,
                         <span class="prelude-val">None </span>=&gt; <span class="kw">continue</span>, <span class="comment">// Not an adapter
@@ -620,32 +677,27 @@
                     }
                 }
                 <span class="kw">match </span>adapter_path {
-                    <span class="prelude-val">Some</span>(path) =&gt; path.as_str().into(),
+                    <span class="prelude-val">Some</span>(path) =&gt; <span class="prelude-val">Some</span>(<span class="macro">format!</span>(<span class="string">&quot;{}/&quot;</span>, path.as_str())),
                     <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
                 }
             }
-            <span class="prelude-val">None </span>=&gt; String::new(),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
         };
 
         <span class="macro">debug!</span>(<span class="string">&quot;root object: {:?}&quot;</span>, root_object);
 
-        <span class="comment">// Iterate over all devices
-        </span><span class="kw">let </span>devices = manager_proxy
-            .get_managed_objects()
-            .<span class="kw">await
-            </span>.error(<span class="string">&quot;Failed to get the list of devices&quot;</span>)<span class="question-mark">?</span>;
-
-        <span class="macro">debug!</span>(<span class="string">&quot;all managed devices: {:?}&quot;</span>, devices);
-
         <span class="kw">for </span>(path, interfaces) <span class="kw">in </span>devices {
-            <span class="kw">if </span>!path.starts_with(<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;{root_object}/&quot;</span>)) {
-                <span class="kw">continue</span>;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(root) = <span class="kw-2">&amp;</span>root_object {
+                <span class="kw">if </span>!path.starts_with(root) {
+                    <span class="kw">continue</span>;
+                }
             }
 
-            <span class="kw">let </span>device_interface = <span class="kw">match </span>interfaces.get(<span class="string">&quot;org.bluez.Device1&quot;</span>) {
-                <span class="prelude-val">Some</span>(i) =&gt; i,
-                <span class="prelude-val">None </span>=&gt; <span class="kw">continue</span>, <span class="comment">// Not a device
-            </span>};
+            <span class="kw">let </span><span class="prelude-val">Some</span>(device_interface) = interfaces.get(<span class="string">&quot;org.bluez.Device1&quot;</span>)
+            <span class="kw">else </span>{
+                <span class="comment">// Not a device
+                </span><span class="kw">continue</span>;
+            };
 
             <span class="kw">let </span>addr: <span class="kw-2">&amp;</span>str = device_interface
                 .get(<span class="string">&quot;Address&quot;</span>)
