@@ -401,6 +401,23 @@
 <a href="#401" id="401">401</a>
 <a href="#402" id="402">402</a>
 <a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
 </pre><pre class="rust"><code><span class="doccomment">//! Monitor Bluetooth device
 //!
 //! This block displays the connectivity of a given Bluetooth device and the battery level if this
@@ -486,18 +503,21 @@
         <span class="kw">match </span>monitor.get_device_info().<span class="kw">await </span>{
             <span class="comment">// Available
             </span><span class="prelude-val">Some</span>(device) =&gt; {
-                <span class="kw">let </span><span class="kw-2">mut </span>values = <span class="macro">map! </span>{
+                <span class="kw">let </span>values = <span class="macro">map! </span>{
                     <span class="string">&quot;icon&quot; </span>=&gt; Value::icon(api.get_icon(device.icon)<span class="question-mark">?</span>),
                     <span class="string">&quot;name&quot; </span>=&gt; Value::text(device.name),
-                    <span class="string">&quot;available&quot; </span>=&gt; Value::flag()
+                    <span class="string">&quot;available&quot; </span>=&gt; Value::flag(),
+                    [<span class="kw">if let </span><span class="prelude-val">Some</span>(p) = device.battery_percentage] <span class="string">&quot;percentage&quot; </span>=&gt; Value::percents(p),
                 };
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(p) = device.battery_percentage {
-                    values.insert(<span class="string">&quot;percentage&quot;</span>.into(), Value::percents(p));
-                }
                 <span class="kw">if </span>device.connected {
                     <span class="macro">debug!</span>(<span class="string">&quot;Showing device as connected&quot;</span>);
-                    widget.state = State::Good;
                     widget.set_format(format.clone());
+                    widget.state = <span class="kw">match </span>device.battery_percentage {
+                        <span class="prelude-val">Some</span>(<span class="number">0</span>..=<span class="number">15</span>) =&gt; State::Critical,
+                        <span class="prelude-val">Some</span>(<span class="number">16</span>..=<span class="number">30</span>) =&gt; State::Warning,
+                        <span class="prelude-val">Some</span>(<span class="number">31</span>..=<span class="number">60</span>) =&gt; State::Info,
+                        <span class="kw">_ </span>=&gt; State::Good,
+                    };
                 } <span class="kw">else </span>{
                     <span class="macro">debug!</span>(<span class="string">&quot;Showing device as disconnected&quot;</span>);
                     widget.set_format(disconnected_format.clone());
@@ -615,6 +635,12 @@
                     .<span class="kw">await
                     </span>.error(<span class="string">&quot;Failed to receive updates&quot;</span>)<span class="question-mark">?</span>;
 
+                <span class="kw">let </span><span class="kw-2">mut </span>interface_added = <span class="self">self
+                    </span>.manager_proxy
+                    .receive_interfaces_added()
+                    .<span class="kw">await
+                    </span>.error(<span class="string">&quot;Failed to monitor interfaces&quot;</span>)<span class="question-mark">?</span>;
+
                 <span class="kw">let </span><span class="kw-2">mut </span>interface_removed = <span class="self">self
                     </span>.manager_proxy
                     .receive_interfaces_removed()
@@ -637,6 +663,13 @@
                             }).<span class="kw">await</span>;
                             <span class="macro">debug!</span>(<span class="string">&quot;Got update for device&quot;</span>);
                             <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                        }
+                        <span class="prelude-val">Some</span>(event) = interface_added.next() =&gt; {
+                            <span class="kw">let </span>args = event.args().error(<span class="string">&quot;Failed to get the args&quot;</span>)<span class="question-mark">?</span>;
+                            <span class="kw">if </span>args.object_path() == device.device.path() {
+                                <span class="macro">debug!</span>(<span class="string">&quot;Interfaces added: {:?}&quot;</span>, args.interfaces_and_properties().keys());
+                                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                            }
                         }
                         <span class="prelude-val">Some</span>(event) = interface_removed.next() =&gt; {
                             <span class="kw">let </span>args = event.args().error(<span class="string">&quot;Failed to get the args&quot;</span>)<span class="question-mark">?</span>;
@@ -771,6 +804,7 @@
                     .<span class="kw">await
                     </span>.error(<span class="string">&quot;Failed to create Device1Proxy&quot;</span>)<span class="question-mark">?</span>,
                 battery: Battery1Proxy::builder(manager_proxy.connection())
+                    .cache_properties(zbus::CacheProperties::No)
                     .path(path)
                     .unwrap()
                     .build()

@@ -433,7 +433,7 @@
 //!
 //! Note that at the moment, only [`wl_gammarelay`](https://github.com/jeremija/wl-gammarelay) and
 //! [`wl_gammarelay_rs`](https://github.com/MaxVerevkin/wl-gammarelay-rs)
-//! subscribe to the events and update the bar when the temperature is modified extenrally. Also,
+//! subscribe to the events and update the bar when the temperature is modified externally. Also,
 //! these are the only drivers at the moment that work under Wayland without flickering.
 //!
 //! # Example
@@ -507,7 +507,7 @@
             } <span class="kw">else if </span>has_command(<span class="string">&quot;wlsunset&quot;</span>).<span class="kw">await</span><span class="question-mark">? </span>{
                 HueShifter::Wlsunset
             } <span class="kw">else </span>{
-                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(<span class="string">&quot;Cound not detect driver program&quot;</span>));
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(<span class="string">&quot;Could not detect driver program&quot;</span>));
             }
         }
     };
