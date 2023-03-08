@@ -106,6 +106,7 @@ define_blocks!(
     tea_timer,
     toggle,
     uptime,
+    virt,
     watson,
     weather,
     xrandr,

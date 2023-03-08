@@ -1,0 +1,4 @@
+[[block]]
+block = "virt"
+uri = "qemu:///system"
+
