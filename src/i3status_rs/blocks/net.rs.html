@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/net.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>net.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/net.rs`."><title>net.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.1 (d5c2e9c34 2023-09-13)" data-channel="1.72.1" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -208,7 +208,8 @@
 <a href="#208" id="208">208</a>
 <a href="#209" id="209">209</a>
 <a href="#210" id="210">210</a>
-</pre><pre class="rust"><code><span class="doccomment">//! Network information
+<a href="#211" id="211">211</a>
+</pre></div><pre class="rust"><code><span class="doccomment">//! Network information
 //!
 //! This block uses `sysfs` and `netlink` and thus does not require any external dependencies.
 //!
@@ -217,10 +218,11 @@
 //! Key | Values | Default
 //! ----|--------|--------
 //! `device` | Network interface to monitor (as specified in `/sys/class/net/`). Supports regex. | If not set, device will be automatically selected every `interval`
+//! `interval` | Update interval in seconds | `2`
 //! `format` | A string to customise the output of this block. See below for available placeholders. | `&quot; $icon ^icon_net_down $speed_down.eng(prefix:K) ^icon_net_up $speed_up.eng(prefix:K) &quot;`
 //! `format_alt` | If set, block will switch between `format` and `format_alt` on every click | `None`
-//! `interval` | Update interval in seconds | `2`
-//! `missing_format` | Same as `format` if the interface cannot be connected (or missing). | `&quot; × &quot;`
+//! `inactive_format` | Same as `format` but for when the interface is inactive | `&quot; $icon Down &quot;`
+//! `missing_format` | Same as `format` but for when the device is missing | `&quot; × &quot;`
 //!
 //! Action          | Description                               | Default button
 //! ----------------|-------------------------------------------|---------------
@@ -274,30 +276,31 @@
 <span class="kw">use </span>std::time::Instant;
 
 <span class="attr">#[derive(Deserialize, Debug, SmartDefault)]
-#[serde(default)]
+#[serde(deny_unknown_fields, default)]
 </span><span class="kw">pub struct </span>Config {
-    device: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    format: FormatConfig,
-    format_alt: <span class="prelude-ty">Option</span>&lt;FormatConfig&gt;,
-    missing_format: FormatConfig,
+    <span class="kw">pub </span>device: <span class="prelude-ty">Option</span>&lt;String&gt;,
     <span class="attr">#[default(<span class="number">2</span>.into())]
-    </span>interval: Seconds,
+    </span><span class="kw">pub </span>interval: Seconds,
+    <span class="kw">pub </span>format: FormatConfig,
+    <span class="kw">pub </span>format_alt: <span class="prelude-ty">Option</span>&lt;FormatConfig&gt;,
+    <span class="kw">pub </span>inactive_format: FormatConfig,
+    <span class="kw">pub </span>missing_format: FormatConfig,
 }
 
-<span class="kw">pub async fn </span>run(config: Config, <span class="kw-2">mut </span>api: CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    api.set_default_actions(<span class="kw-2">&amp;</span>[(MouseButton::Left, <span class="prelude-val">None</span>, <span class="string">&quot;toggle_format&quot;</span>)])
-        .<span class="kw">await</span><span class="question-mark">?</span>;
+<span class="kw">pub async fn </span>run(config: <span class="kw-2">&amp;</span>Config, api: <span class="kw-2">&amp;</span>CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>actions = api.get_actions()<span class="question-mark">?</span>;
+    api.set_default_actions(<span class="kw-2">&amp;</span>[(MouseButton::Left, <span class="prelude-val">None</span>, <span class="string">&quot;toggle_format&quot;</span>)])<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="kw-2">mut </span>format = config.format.with_default(
         <span class="string">&quot; $icon ^icon_net_down $speed_down.eng(prefix:K) ^icon_net_up $speed_up.eng(prefix:K) &quot;</span>,
     )<span class="question-mark">?</span>;
     <span class="kw">let </span>missing_format = config.missing_format.with_default(<span class="string">&quot; × &quot;</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span><span class="kw-2">mut </span>format_alt = <span class="kw">match </span>config.format_alt {
+    <span class="kw">let </span>inactive_format = config.inactive_format.with_default(<span class="string">&quot; $icon Down &quot;</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>format_alt = <span class="kw">match </span><span class="kw-2">&amp;</span>config.format_alt {
         <span class="prelude-val">Some</span>(f) =&gt; <span class="prelude-val">Some</span>(f.with_default(<span class="string">&quot;&quot;</span>)<span class="question-mark">?</span>),
         <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
     };
 
-    <span class="kw">let </span><span class="kw-2">mut </span>widget = Widget::new().with_format(format.clone());
     <span class="kw">let </span><span class="kw-2">mut </span>timer = config.interval.timer();
 
     <span class="kw">let </span>device_re = config
@@ -316,17 +319,16 @@
     <span class="kw">loop </span>{
         <span class="kw">match </span>NetDevice::new(device_re.as_ref()).<span class="kw">await</span><span class="question-mark">? </span>{
             <span class="prelude-val">None </span>=&gt; {
-                widget.set_format(missing_format.clone());
-                widget.set_values(default());
-                api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
-            }
-            <span class="prelude-val">Some</span>(device) <span class="kw">if </span>!device.is_up() =&gt; {
-                widget.set_format(missing_format.clone());
-                widget.set_values(default());
-                api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
+                api.set_widget(Widget::new().with_format(missing_format.clone()))<span class="question-mark">?</span>;
             }
             <span class="prelude-val">Some</span>(device) =&gt; {
-                widget.set_format(format.clone());
+                <span class="kw">let </span><span class="kw-2">mut </span>widget = Widget::new();
+
+                <span class="kw">if </span>device.is_up() {
+                    widget.set_format(format.clone());
+                } <span class="kw">else </span>{
+                    widget.set_format(inactive_format.clone());
+                }
 
                 <span class="kw">let </span><span class="kw-2">mut </span>speed_down: f64 = <span class="number">0.0</span>;
                 <span class="kw">let </span><span class="kw-2">mut </span>speed_up: f64 = <span class="number">0.0</span>;
@@ -351,9 +353,9 @@
                 push_to_hist(<span class="kw-2">&amp;mut </span>tx_hist, speed_up);
 
                 <span class="kw">let </span>icon = <span class="kw">if let </span><span class="prelude-val">Some</span>(signal) = device.signal() {
-                    Value::icon(api.get_icon_in_progression(device.icon, signal / <span class="number">100.0</span>)<span class="question-mark">?</span>)
+                    Value::icon_progression(device.icon, signal / <span class="number">100.0</span>)
                 } <span class="kw">else </span>{
-                    Value::icon(api.get_icon(device.icon)<span class="question-mark">?</span>)
+                    Value::icon(device.icon)
                 };
 
                 widget.set_values(<span class="macro">map! </span>{
@@ -371,16 +373,16 @@
                     <span class="string">&quot;device&quot; </span>=&gt; Value::text(device.iface.name),
                 });
 
-                api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
+                api.set_widget(widget)<span class="question-mark">?</span>;
             }
         }
 
         <span class="kw">loop </span>{
             <span class="macro">select! </span>{
                 <span class="kw">_ </span>= timer.tick() =&gt; <span class="kw">break</span>,
-                event = api.event() =&gt; <span class="kw">match </span>event {
-                    UpdateRequest =&gt; <span class="kw">break</span>,
-                    Action(a) <span class="kw">if </span>a == <span class="string">&quot;toggle_format&quot; </span>=&gt; {
+                <span class="kw">_ </span>= api.wait_for_update_request() =&gt; <span class="kw">break</span>,
+                <span class="prelude-val">Some</span>(action) = actions.recv() =&gt; <span class="kw">match </span>action.as_ref() {
+                    <span class="string">&quot;toggle_format&quot; </span>=&gt; {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(format_alt) = <span class="kw-2">&amp;mut </span>format_alt {
                             std::mem::swap(format_alt, <span class="kw-2">&amp;mut </span>format);
                             <span class="kw">break</span>;
@@ -418,5 +420,4 @@
         <span class="macro">assert_eq!</span>(<span class="kw-2">&amp;</span>hist, <span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">2</span>]);
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.1 (8460ca823 2023-03-20)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

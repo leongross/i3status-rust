@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["RangeMap","A map with keys being ranges."],["Seconds",""],["ShellString",""]]};

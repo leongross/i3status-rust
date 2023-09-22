@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/sound/pulseaudio.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>pulseaudio.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../i3status_rs/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/sound/pulseaudio.rs`."><title>pulseaudio.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.1 (d5c2e9c34 2023-09-13)" data-channel="1.72.1" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../../source-files.js"></script><script defer src="../../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../../i3status_rs/index.html"><img class="rust-logo" src="../../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -481,20 +481,47 @@
 <a href="#481" id="481">481</a>
 <a href="#482" id="482">482</a>
 <a href="#483" id="483">483</a>
-</pre><pre class="rust"><code><span class="kw">use </span>libpulse_binding::callbacks::ListResult;
+<a href="#484" id="484">484</a>
+<a href="#485" id="485">485</a>
+<a href="#486" id="486">486</a>
+<a href="#487" id="487">487</a>
+<a href="#488" id="488">488</a>
+<a href="#489" id="489">489</a>
+<a href="#490" id="490">490</a>
+<a href="#491" id="491">491</a>
+<a href="#492" id="492">492</a>
+<a href="#493" id="493">493</a>
+<a href="#494" id="494">494</a>
+<a href="#495" id="495">495</a>
+<a href="#496" id="496">496</a>
+<a href="#497" id="497">497</a>
+<a href="#498" id="498">498</a>
+<a href="#499" id="499">499</a>
+<a href="#500" id="500">500</a>
+<a href="#501" id="501">501</a>
+<a href="#502" id="502">502</a>
+<a href="#503" id="503">503</a>
+<a href="#504" id="504">504</a>
+<a href="#505" id="505">505</a>
+<a href="#506" id="506">506</a>
+<a href="#507" id="507">507</a>
+<a href="#508" id="508">508</a>
+<a href="#509" id="509">509</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>libc::c_void;
+<span class="kw">use </span>libpulse_binding::callbacks::ListResult;
 <span class="kw">use </span>libpulse_binding::context::{
     introspect::ServerInfo, introspect::SinkInfo, introspect::SourceInfo, subscribe::Facility,
-    subscribe::InterestMaskSet, subscribe::Operation <span class="kw">as </span>SubscribeOperation, Context, FlagSet,
-    State <span class="kw">as </span>PulseState,
+    subscribe::InterestMaskSet, Context, FlagSet, State <span class="kw">as </span>PulseState,
 };
+<span class="kw">use </span>libpulse_binding::mainloop::api::MainloopApi;
 <span class="kw">use </span>libpulse_binding::mainloop::standard::{IterateResult, Mainloop};
 <span class="kw">use </span>libpulse_binding::proplist::{properties, Proplist};
 <span class="kw">use </span>libpulse_binding::volume::{ChannelVolumes, Volume};
 
-<span class="kw">use </span>crossbeam_channel::{unbounded, Sender};
-
 <span class="kw">use </span>std::cmp::{max, min};
 <span class="kw">use </span>std::convert::{TryFrom, TryInto};
+<span class="kw">use </span>std::io;
+<span class="kw">use </span>std::os::fd::RawFd;
 <span class="kw">use </span>std::sync::Mutex;
 <span class="kw">use </span>std::thread;
 
@@ -529,7 +556,8 @@
 }
 
 <span class="kw">struct </span>Client {
-    sender: Sender&lt;ClientRequest&gt;,
+    send_req: std::sync::mpsc::Sender&lt;ClientRequest&gt;,
+    ml_waker: MainloopWaker,
 }
 
 <span class="attr">#[derive(Debug)]
@@ -587,7 +615,6 @@
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">enum </span>ClientRequest {
     GetDefaultDevice,
-    GetInfoByIndex(DeviceKind, u32),
     GetInfoByName(DeviceKind, String),
     SetVolumeByName(DeviceKind, String, ChannelVolumes),
     SetMuteByName(DeviceKind, String, bool),
@@ -640,127 +667,128 @@
             IterateResult::Success(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(()),
         }
     }
+
+    <span class="doccomment">/// Create connection in a new thread.
+    ///
+    /// If connection can&#39;t be created, Err is returned.
+    </span><span class="kw">fn </span>spawn(thread_name: <span class="kw-2">&amp;</span>str, f: <span class="kw">impl </span>Fn(<span class="self">Self</span>) -&gt; bool + Send + <span class="lifetime">&#39;static</span>) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+        <span class="kw">let </span>(tx, rx) = std::sync::mpsc::sync_channel(<span class="number">0</span>);
+        thread::Builder::new()
+            .name(thread_name.to_owned())
+            .spawn(<span class="kw">move </span>|| <span class="kw">match </span><span class="self">Self</span>::new() {
+                <span class="prelude-val">Ok</span>(<span class="kw-2">mut </span>conn) =&gt; {
+                    tx.send(<span class="prelude-val">Ok</span>(())).unwrap();
+                    <span class="kw">while </span>f(conn) {
+                        <span class="kw">let </span><span class="kw-2">mut </span>try_i = <span class="number">0usize</span>;
+                        <span class="kw">loop </span>{
+                            try_i += <span class="number">1</span>;
+                            <span class="kw">let </span>delay =
+                                Duration::from_millis(<span class="kw">if </span>try_i &lt;= <span class="number">10 </span>{ <span class="number">100 </span>} <span class="kw">else </span>{ <span class="number">5_000 </span>});
+                            <span class="macro">eprintln!</span>(<span class="string">&quot;reconnecting to pulseaudio in {delay:?}... (try {try_i})&quot;</span>);
+                            thread::sleep(delay);
+                            <span class="kw">if let </span><span class="prelude-val">Ok</span>(c) = <span class="self">Self</span>::new() {
+                                <span class="macro">eprintln!</span>(<span class="string">&quot;reconnected to pulseaudio&quot;</span>);
+                                conn = c;
+                                <span class="kw">break</span>;
+                            }
+                        }
+                    }
+                }
+                <span class="prelude-val">Err</span>(err) =&gt; {
+                    tx.send(<span class="prelude-val">Err</span>(err)).unwrap();
+                }
+            })
+            .error(<span class="string">&quot;failed to spawn a thread&quot;</span>)<span class="question-mark">?</span>;
+        rx.recv().error(<span class="string">&quot;channel closed&quot;</span>)<span class="question-mark">?
+    </span>}
 }
 
 <span class="kw">impl </span>Client {
     <span class="kw">fn </span>new() -&gt; <span class="prelude-ty">Result</span>&lt;Client&gt; {
-        <span class="kw">let </span>(send_req, recv_req) = unbounded();
-        <span class="kw">let </span>(send_result, recv_result) = unbounded();
-        <span class="kw">let </span>send_result2 = send_result.clone();
-        <span class="kw">let </span>new_connection = |sender: Sender&lt;<span class="prelude-ty">Result</span>&lt;()&gt;&gt;| -&gt; Connection {
-            <span class="kw">let </span>conn = Connection::new();
-            <span class="kw">match </span>conn {
-                <span class="prelude-val">Ok</span>(conn) =&gt; {
-                    sender.send(<span class="prelude-val">Ok</span>(())).unwrap();
-                    conn
-                }
-                <span class="prelude-val">Err</span>(err) =&gt; {
-                    sender.send(<span class="prelude-val">Err</span>(err)).unwrap();
-                    <span class="macro">panic!</span>(<span class="string">&quot;failed to create pulseaudio connection&quot;</span>);
-                }
-            }
-        };
+        <span class="kw">let </span>(send_req, recv_req) = std::sync::mpsc::channel();
+        <span class="kw">let </span>ml_waker = MainloopWaker::new().unwrap();
 
-        <span class="comment">// requests
-        </span>thread::Builder::new()
-            .name(<span class="string">&quot;sound_pulseaudio_req&quot;</span>.into())
-            .spawn(<span class="kw">move </span>|| {
-                <span class="kw">let </span><span class="kw-2">mut </span>connection = new_connection(send_result);
+        Connection::spawn(<span class="string">&quot;sound_pulseaudio&quot;</span>, <span class="kw">move </span>|<span class="kw-2">mut </span>connection| {
+            ml_waker.attach(connection.mainloop.get_api());
+
+            <span class="kw">let </span>introspector = connection.context.introspect();
+            connection
+                .context
+                .set_subscribe_callback(<span class="prelude-val">Some</span>(Box::new(<span class="kw">move </span>|facility, <span class="kw">_</span>, index| <span class="kw">match </span>facility {
+                    <span class="prelude-val">Some</span>(Facility::Server) =&gt; {
+                        introspector.get_server_info(Client::server_info_callback);
+                    }
+                    <span class="prelude-val">Some</span>(Facility::Sink) =&gt; {
+                        introspector.get_sink_info_by_index(index, Client::sink_info_callback);
+                    }
+                    <span class="prelude-val">Some</span>(Facility::Source) =&gt; {
+                        introspector.get_source_info_by_index(index, Client::source_info_callback);
+                    }
+                    <span class="kw">_ </span>=&gt; (),
+                })));
+
+            connection.context.subscribe(
+                InterestMaskSet::SERVER | InterestMaskSet::SINK | InterestMaskSet::SOURCE,
+                |<span class="kw">_</span>| (),
+            );
+
+            <span class="kw">let </span><span class="kw-2">mut </span>introspector = connection.context.introspect();
+
+            <span class="kw">loop </span>{
+                <span class="kw">loop </span>{
+                    connection.iterate(<span class="bool-val">true</span>).unwrap();
+                    <span class="kw">match </span>connection.context.get_state() {
+                        PulseState::Ready =&gt; <span class="kw">break</span>,
+                        PulseState::Failed =&gt; <span class="kw">return </span><span class="bool-val">true</span>,
+                        <span class="kw">_ </span>=&gt; (),
+                    }
+                }
 
                 <span class="kw">loop </span>{
-                    <span class="comment">// make sure mainloop dispatched everything
-                    </span><span class="kw">loop </span>{
-                        connection.iterate(<span class="bool-val">false</span>).unwrap();
-                        <span class="kw">if </span>connection.context.get_state() == PulseState::Ready {
-                            <span class="kw">break</span>;
+                    <span class="kw">use </span>std::sync::mpsc::TryRecvError;
+                    <span class="kw">let </span>req = <span class="kw">match </span>recv_req.try_recv() {
+                        <span class="prelude-val">Ok</span>(x) =&gt; x,
+                        <span class="prelude-val">Err</span>(TryRecvError::Empty) =&gt; <span class="kw">break</span>,
+                        <span class="prelude-val">Err</span>(TryRecvError::Disconnected) =&gt; <span class="kw">return </span><span class="bool-val">false</span>,
+                    };
+
+                    <span class="kw">use </span>ClientRequest::<span class="kw-2">*</span>;
+                    <span class="kw">match </span>req {
+                        GetDefaultDevice =&gt; {
+                            introspector.get_server_info(Client::server_info_callback);
                         }
-                    }
-
-                    <span class="kw">match </span>recv_req.recv() {
-                        <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; {}
-                        <span class="prelude-val">Ok</span>(req) =&gt; {
-                            <span class="kw">use </span>ClientRequest::<span class="kw-2">*</span>;
-                            <span class="kw">let </span><span class="kw-2">mut </span>introspector = connection.context.introspect();
-
-                            <span class="kw">match </span>req {
-                                GetDefaultDevice =&gt; {
-                                    introspector.get_server_info(Client::server_info_callback);
-                                }
-                                GetInfoByIndex(DeviceKind::Sink, index) =&gt; {
-                                    introspector
-                                        .get_sink_info_by_index(index, Client::sink_info_callback);
-                                }
-                                GetInfoByIndex(DeviceKind::Source, index) =&gt; {
-                                    introspector.get_source_info_by_index(
-                                        index,
-                                        Client::source_info_callback,
-                                    );
-                                }
-                                GetInfoByName(DeviceKind::Sink, name) =&gt; {
-                                    introspector
-                                        .get_sink_info_by_name(<span class="kw-2">&amp;</span>name, Client::sink_info_callback);
-                                }
-                                GetInfoByName(DeviceKind::Source, name) =&gt; {
-                                    introspector.get_source_info_by_name(
-                                        <span class="kw-2">&amp;</span>name,
-                                        Client::source_info_callback,
-                                    );
-                                }
-                                SetVolumeByName(DeviceKind::Sink, name, volumes) =&gt; {
-                                    introspector.set_sink_volume_by_name(<span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span>volumes, <span class="prelude-val">None</span>);
-                                }
-                                SetVolumeByName(DeviceKind::Source, name, volumes) =&gt; {
-                                    introspector.set_source_volume_by_name(<span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span>volumes, <span class="prelude-val">None</span>);
-                                }
-                                SetMuteByName(DeviceKind::Sink, name, mute) =&gt; {
-                                    introspector.set_sink_mute_by_name(<span class="kw-2">&amp;</span>name, mute, <span class="prelude-val">None</span>);
-                                }
-                                SetMuteByName(DeviceKind::Source, name, mute) =&gt; {
-                                    introspector.set_source_mute_by_name(<span class="kw-2">&amp;</span>name, mute, <span class="prelude-val">None</span>);
-                                }
-                            };
-
-                            <span class="comment">// send request and receive response
-                            </span>connection.iterate(<span class="bool-val">true</span>).unwrap();
-                            connection.iterate(<span class="bool-val">true</span>).unwrap();
+                        GetInfoByName(DeviceKind::Sink, name) =&gt; {
+                            introspector.get_sink_info_by_name(<span class="kw-2">&amp;</span>name, Client::sink_info_callback);
                         }
-                    }
+                        GetInfoByName(DeviceKind::Source, name) =&gt; {
+                            introspector
+                                .get_source_info_by_name(<span class="kw-2">&amp;</span>name, Client::source_info_callback);
+                        }
+                        SetVolumeByName(DeviceKind::Sink, name, volumes) =&gt; {
+                            introspector.set_sink_volume_by_name(<span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span>volumes, <span class="prelude-val">None</span>);
+                        }
+                        SetVolumeByName(DeviceKind::Source, name, volumes) =&gt; {
+                            introspector.set_source_volume_by_name(<span class="kw-2">&amp;</span>name, <span class="kw-2">&amp;</span>volumes, <span class="prelude-val">None</span>);
+                        }
+                        SetMuteByName(DeviceKind::Sink, name, mute) =&gt; {
+                            introspector.set_sink_mute_by_name(<span class="kw-2">&amp;</span>name, mute, <span class="prelude-val">None</span>);
+                        }
+                        SetMuteByName(DeviceKind::Source, name, mute) =&gt; {
+                            introspector.set_source_mute_by_name(<span class="kw-2">&amp;</span>name, mute, <span class="prelude-val">None</span>);
+                        }
+                    };
                 }
-            })
-            .unwrap();
-        recv_result
-            .recv()
-            .error(<span class="string">&quot;Failed to receive from pulseaudio thread channel&quot;</span>)<span class="question-mark">??</span>;
+            }
+        })<span class="question-mark">?</span>;
 
-        <span class="comment">// subscribe
-        </span>thread::Builder::new()
-            .name(<span class="string">&quot;sound_pulseaudio_sub&quot;</span>.into())
-            .spawn(<span class="kw">move </span>|| {
-                <span class="kw">let </span><span class="kw-2">mut </span>connection = new_connection(send_result2);
-
-                <span class="comment">// subscribe for events
-                </span>connection
-                    .context
-                    .set_subscribe_callback(<span class="prelude-val">Some</span>(Box::new(Client::subscribe_callback)));
-                connection.context.subscribe(
-                    InterestMaskSet::SERVER | InterestMaskSet::SINK | InterestMaskSet::SOURCE,
-                    |<span class="kw">_</span>| {},
-                );
-
-                connection.mainloop.run().unwrap();
-            })
-            .unwrap();
-        recv_result
-            .recv()
-            .error(<span class="string">&quot;Failed to receive from pulseaudio thread channel&quot;</span>)<span class="question-mark">??</span>;
-
-        <span class="prelude-val">Ok</span>(Client { sender: send_req })
+        <span class="prelude-val">Ok</span>(Client { send_req, ml_waker })
     }
 
     <span class="kw">fn </span>send(request: ClientRequest) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
         <span class="kw">match </span>CLIENT.as_ref() {
             <span class="prelude-val">Ok</span>(client) =&gt; {
-                client.sender.send(request).unwrap();
+                client.send_req.send(request).unwrap();
+                client.ml_waker.wake().unwrap();
                 <span class="prelude-val">Ok</span>(())
             }
             <span class="prelude-val">Err</span>(err) =&gt; <span class="prelude-val">Err</span>(Error::new(<span class="macro">format!</span>(
@@ -807,28 +835,6 @@
                 .insert((DeviceKind::Source, vol_info.name.to_string()), vol_info);
 
             Client::send_update_event();
-        }
-    }
-
-    <span class="kw">fn </span>subscribe_callback(
-        facility: <span class="prelude-ty">Option</span>&lt;Facility&gt;,
-        _operation: <span class="prelude-ty">Option</span>&lt;SubscribeOperation&gt;,
-        index: u32,
-    ) {
-        <span class="kw">match </span>facility {
-            <span class="prelude-val">None </span>=&gt; {}
-            <span class="prelude-val">Some</span>(facility) =&gt; <span class="kw">match </span>facility {
-                Facility::Server =&gt; {
-                    Client::send(ClientRequest::GetDefaultDevice).ok();
-                }
-                Facility::Sink =&gt; {
-                    Client::send(ClientRequest::GetInfoByIndex(DeviceKind::Sink, index)).ok();
-                }
-                Facility::Source =&gt; {
-                    Client::send(ClientRequest::GetInfoByIndex(DeviceKind::Source, index)).ok();
-                }
-                <span class="kw">_ </span>=&gt; {}
-            },
         }
     }
 
@@ -894,8 +900,8 @@
         <span class="self">self</span>.description.clone()
     }
 
-    <span class="kw">fn </span>active_port(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
-        <span class="self">self</span>.active_port.as_deref()
+    <span class="kw">fn </span>active_port(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="self">self</span>.active_port.clone()
     }
 
     <span class="kw">fn </span>form_factor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
@@ -964,5 +970,50 @@
             </span>.error(<span class="string">&quot;Failed to receive new update&quot;</span>)
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../../" data-static-root-path="../../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.1 (8460ca823 2023-03-20)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+
+<span class="doccomment">/// Thread safe [`Mainloop`] waker.
+///
+/// Has the same purpose as [`Mainloop::wake`], but can be shared across threads.
+</span><span class="attr">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">struct </span>MainloopWaker {
+    pipe_tx: RawFd,
+    pipe_rx: RawFd,
+}
+
+<span class="kw">impl </span>MainloopWaker {
+    <span class="doccomment">/// Create new waker.
+    </span><span class="kw">fn </span>new() -&gt; io::Result&lt;<span class="self">Self</span>&gt; {
+        <span class="kw">let </span>(pipe_rx, pipe_tx) = nix::unistd::pipe2(nix::fcntl::OFlag::O_CLOEXEC)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ pipe_tx, pipe_rx })
+    }
+
+    <span class="doccomment">/// Attach this waker to a [`Mainloop`].
+    ///
+    /// A waker should be attached to _one_ mainloop.
+    </span><span class="kw">fn </span>attach(<span class="self">self</span>, ml: <span class="kw-2">&amp;</span>MainloopApi) {
+        <span class="kw">extern </span><span class="string">&quot;C&quot; </span><span class="kw">fn </span>wake_cb(
+            <span class="kw">_</span>: <span class="kw-2">*const </span>MainloopApi,
+            <span class="kw">_</span>: <span class="kw-2">*mut </span>libpulse_binding::mainloop::events::io::IoEventInternal,
+            fd: RawFd,
+            <span class="kw">_</span>: libpulse_binding::mainloop::events::io::FlagSet,
+            <span class="kw">_</span>: <span class="kw-2">*mut </span>c_void,
+        ) {
+            nix::unistd::read(fd, <span class="kw-2">&amp;mut </span>[<span class="number">0</span>; <span class="number">32</span>]).unwrap();
+        }
+
+        (ml.io_new.unwrap())(
+            ml <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>,
+            <span class="self">self</span>.pipe_rx,
+            libpulse_binding::mainloop::events::io::FlagSet::INPUT,
+            <span class="prelude-val">Some</span>(wake_cb),
+            std::ptr::null_mut(),
+        );
+    }
+
+    <span class="doccomment">/// Interrupt blocking [`Mainloop::iterate`].
+    </span><span class="kw">fn </span>wake(<span class="self">self</span>) -&gt; io::Result&lt;()&gt; {
+        nix::unistd::write(<span class="self">self</span>.pipe_tx, <span class="kw-2">&amp;</span>[<span class="number">0</span>])<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+}
+</code></pre></div></section></main></body></html>

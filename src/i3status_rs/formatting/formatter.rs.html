@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/formatting/formatter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>formatter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/formatting/formatter.rs`."><title>formatter.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.1 (d5c2e9c34 2023-09-13)" data-channel="1.72.1" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -520,9 +520,187 @@
 <a href="#520" id="520">520</a>
 <a href="#521" id="521">521</a>
 <a href="#522" id="522">522</a>
-</pre><pre class="rust"><code><span class="kw">use </span>chrono::format::{Item, StrftimeItems};
+<a href="#523" id="523">523</a>
+<a href="#524" id="524">524</a>
+<a href="#525" id="525">525</a>
+<a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
+<a href="#529" id="529">529</a>
+<a href="#530" id="530">530</a>
+<a href="#531" id="531">531</a>
+<a href="#532" id="532">532</a>
+<a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
+<a href="#551" id="551">551</a>
+<a href="#552" id="552">552</a>
+<a href="#553" id="553">553</a>
+<a href="#554" id="554">554</a>
+<a href="#555" id="555">555</a>
+<a href="#556" id="556">556</a>
+<a href="#557" id="557">557</a>
+<a href="#558" id="558">558</a>
+<a href="#559" id="559">559</a>
+<a href="#560" id="560">560</a>
+<a href="#561" id="561">561</a>
+<a href="#562" id="562">562</a>
+<a href="#563" id="563">563</a>
+<a href="#564" id="564">564</a>
+<a href="#565" id="565">565</a>
+<a href="#566" id="566">566</a>
+<a href="#567" id="567">567</a>
+<a href="#568" id="568">568</a>
+<a href="#569" id="569">569</a>
+<a href="#570" id="570">570</a>
+<a href="#571" id="571">571</a>
+<a href="#572" id="572">572</a>
+<a href="#573" id="573">573</a>
+<a href="#574" id="574">574</a>
+<a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
+<a href="#608" id="608">608</a>
+<a href="#609" id="609">609</a>
+<a href="#610" id="610">610</a>
+<a href="#611" id="611">611</a>
+<a href="#612" id="612">612</a>
+<a href="#613" id="613">613</a>
+<a href="#614" id="614">614</a>
+<a href="#615" id="615">615</a>
+<a href="#616" id="616">616</a>
+<a href="#617" id="617">617</a>
+<a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+<a href="#625" id="625">625</a>
+<a href="#626" id="626">626</a>
+<a href="#627" id="627">627</a>
+<a href="#628" id="628">628</a>
+<a href="#629" id="629">629</a>
+<a href="#630" id="630">630</a>
+<a href="#631" id="631">631</a>
+<a href="#632" id="632">632</a>
+<a href="#633" id="633">633</a>
+<a href="#634" id="634">634</a>
+<a href="#635" id="635">635</a>
+<a href="#636" id="636">636</a>
+<a href="#637" id="637">637</a>
+<a href="#638" id="638">638</a>
+<a href="#639" id="639">639</a>
+<a href="#640" id="640">640</a>
+<a href="#641" id="641">641</a>
+<a href="#642" id="642">642</a>
+<a href="#643" id="643">643</a>
+<a href="#644" id="644">644</a>
+<a href="#645" id="645">645</a>
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
+<a href="#650" id="650">650</a>
+<a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+<a href="#660" id="660">660</a>
+<a href="#661" id="661">661</a>
+<a href="#662" id="662">662</a>
+<a href="#663" id="663">663</a>
+<a href="#664" id="664">664</a>
+<a href="#665" id="665">665</a>
+<a href="#666" id="666">666</a>
+<a href="#667" id="667">667</a>
+<a href="#668" id="668">668</a>
+<a href="#669" id="669">669</a>
+<a href="#670" id="670">670</a>
+<a href="#671" id="671">671</a>
+<a href="#672" id="672">672</a>
+<a href="#673" id="673">673</a>
+<a href="#674" id="674">674</a>
+<a href="#675" id="675">675</a>
+<a href="#676" id="676">676</a>
+<a href="#677" id="677">677</a>
+<a href="#678" id="678">678</a>
+<a href="#679" id="679">679</a>
+<a href="#680" id="680">680</a>
+<a href="#681" id="681">681</a>
+<a href="#682" id="682">682</a>
+<a href="#683" id="683">683</a>
+<a href="#684" id="684">684</a>
+<a href="#685" id="685">685</a>
+<a href="#686" id="686">686</a>
+<a href="#687" id="687">687</a>
+<a href="#688" id="688">688</a>
+<a href="#689" id="689">689</a>
+<a href="#690" id="690">690</a>
+<a href="#691" id="691">691</a>
+<a href="#692" id="692">692</a>
+<a href="#693" id="693">693</a>
+<a href="#694" id="694">694</a>
+<a href="#695" id="695">695</a>
+<a href="#696" id="696">696</a>
+<a href="#697" id="697">697</a>
+<a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>chrono::format::{Item, StrftimeItems};
 <span class="kw">use </span>chrono::{Local, Locale};
 <span class="kw">use </span>once_cell::sync::Lazy;
+<span class="kw">use </span>unicode_segmentation::UnicodeSegmentation;
 
 <span class="kw">use </span>std::fmt::Debug;
 <span class="kw">use </span>std::iter::repeat;
@@ -532,14 +710,18 @@
 <span class="kw">use </span><span class="kw">super</span>::prefix::Prefix;
 <span class="kw">use </span><span class="kw">super</span>::unit::Unit;
 <span class="kw">use </span><span class="kw">super</span>::value::ValueInner <span class="kw">as </span>Value;
+<span class="kw">use </span><span class="kw">crate</span>::config::SharedConfig;
 <span class="kw">use </span><span class="kw">crate</span>::errors::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::escape::CollectEscaped;
 
 <span class="kw">const </span>DEFAULT_STR_MIN_WIDTH: usize = <span class="number">0</span>;
 <span class="kw">const </span>DEFAULT_STR_MAX_WIDTH: usize = usize::MAX;
 <span class="kw">const </span>DEFAULT_STR_ROT_INTERVAL: <span class="prelude-ty">Option</span>&lt;f64&gt; = <span class="prelude-val">None</span>;
+<span class="kw">const </span>DEFAULT_STR_ROT_SEP: <span class="prelude-ty">Option</span>&lt;String&gt; = <span class="prelude-val">None</span>;
 
-<span class="kw">const </span>DEFAULT_BAR_WIDTH: usize = <span class="number">5</span>;
+<span class="kw">const </span>DEFAULT_BAR_VERTICAL: bool = <span class="bool-val">false</span>;
+<span class="kw">const </span>DEFAULT_BAR_WIDTH_HORIZONTAL: usize = <span class="number">5</span>;
+<span class="kw">const </span>DEFAULT_BAR_WIDTH_VERTICAL: usize = <span class="number">1</span>;
 <span class="kw">const </span>DEFAULT_BAR_MAX_VAL: f64 = <span class="number">100.0</span>;
 
 <span class="kw">const </span>DEFAULT_NUMBER_WIDTH: usize = <span class="number">2</span>;
@@ -552,6 +734,7 @@
     max_width: DEFAULT_STR_MAX_WIDTH,
     rot_interval_ms: <span class="prelude-val">None</span>,
     init_time: <span class="prelude-val">None</span>,
+    rot_separator: <span class="prelude-val">None</span>,
 };
 
 <span class="comment">// TODO: split those defaults
@@ -573,7 +756,7 @@
 <span class="kw">pub const </span>DEFAULT_FLAG_FORMATTER: FlagFormatter = FlagFormatter;
 
 <span class="kw">pub trait </span>Formatter: Debug + Send + Sync {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt;;
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt;;
 
     <span class="kw">fn </span>interval(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Duration&gt; {
         <span class="prelude-val">None
@@ -586,6 +769,7 @@
             <span class="kw">let </span><span class="kw-2">mut </span>min_width = DEFAULT_STR_MIN_WIDTH;
             <span class="kw">let </span><span class="kw-2">mut </span>max_width = DEFAULT_STR_MAX_WIDTH;
             <span class="kw">let </span><span class="kw-2">mut </span>rot_interval = DEFAULT_STR_ROT_INTERVAL;
+            <span class="kw">let </span><span class="kw-2">mut </span>rot_separator = DEFAULT_STR_ROT_SEP;
             <span class="kw">for </span>arg <span class="kw">in </span>args {
                 <span class="kw">match </span>arg.key {
                     <span class="string">&quot;min_width&quot; </span>| <span class="string">&quot;min_w&quot; </span>=&gt; {
@@ -604,6 +788,9 @@
                                 .parse()
                                 .error(<span class="string">&quot;Interval must be a positive number&quot;</span>)<span class="question-mark">?</span>,
                         );
+                    }
+                    <span class="string">&quot;rot_separator&quot; </span>=&gt; {
+                        rot_separator = <span class="prelude-val">Some</span>(arg.val.to_string());
                     }
                     other =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(<span class="macro">format!</span>(<span class="string">&quot;Unknown argument for &#39;str&#39;: &#39;{other}&#39;&quot;</span>)));
@@ -625,6 +812,7 @@
                 max_width,
                 rot_interval_ms: rot_interval.map(|x| (x * <span class="number">1e3</span>) <span class="kw">as </span>u64),
                 init_time: <span class="prelude-val">Some</span>(Instant::now()),
+                rot_separator,
             }))
         }
         <span class="string">&quot;pango-str&quot; </span>=&gt; {
@@ -638,22 +826,33 @@
             <span class="prelude-val">Ok</span>(Box::new(PangoStrFormatter))
         }
         <span class="string">&quot;bar&quot; </span>=&gt; {
-            <span class="kw">let </span><span class="kw-2">mut </span>width = DEFAULT_BAR_WIDTH;
+            <span class="kw">let </span><span class="kw-2">mut </span>vertical = DEFAULT_BAR_VERTICAL;
+            <span class="kw">let </span><span class="kw-2">mut </span>width = <span class="prelude-val">None</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>max_value = DEFAULT_BAR_MAX_VAL;
             <span class="kw">for </span>arg <span class="kw">in </span>args {
                 <span class="kw">match </span>arg.key {
                     <span class="string">&quot;width&quot; </span>| <span class="string">&quot;w&quot; </span>=&gt; {
-                        width = arg.val.parse().error(<span class="string">&quot;Width must be a positive integer&quot;</span>)<span class="question-mark">?</span>;
+                        width = <span class="prelude-val">Some</span>(arg.val.parse().error(<span class="string">&quot;Width must be a positive integer&quot;</span>)<span class="question-mark">?</span>);
                     }
                     <span class="string">&quot;max_value&quot; </span>=&gt; {
                         max_value = arg.val.parse().error(<span class="string">&quot;Max value must be a number&quot;</span>)<span class="question-mark">?</span>;
+                    }
+                    <span class="string">&quot;vertical&quot; </span>| <span class="string">&quot;v&quot; </span>=&gt; {
+                        vertical = arg.val.parse().error(<span class="string">&quot;Vertical value must be a bool&quot;</span>)<span class="question-mark">?</span>;
                     }
                     other =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Err</span>(Error::new(<span class="macro">format!</span>(<span class="string">&quot;Unknown argument for &#39;bar&#39;: &#39;{other}&#39;&quot;</span>)));
                     }
                 }
             }
-            <span class="prelude-val">Ok</span>(Box::new(BarFormatter { width, max_value }))
+            <span class="prelude-val">Ok</span>(Box::new(BarFormatter {
+                width: width.unwrap_or(<span class="kw">match </span>vertical {
+                    <span class="bool-val">false </span>=&gt; DEFAULT_BAR_WIDTH_HORIZONTAL,
+                    <span class="bool-val">true </span>=&gt; DEFAULT_BAR_WIDTH_VERTICAL,
+                }),
+                max_value,
+                vertical,
+            }))
         }
         <span class="string">&quot;eng&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Box::new(EngFormatter(EngFixConfig::from_args(args)<span class="question-mark">?</span>))),
         <span class="string">&quot;fix&quot; </span>=&gt; <span class="prelude-val">Ok</span>(Box::new(FixFormatter(EngFixConfig::from_args(args)<span class="question-mark">?</span>))),
@@ -691,37 +890,45 @@
     max_width: usize,
     rot_interval_ms: <span class="prelude-ty">Option</span>&lt;u64&gt;,
     init_time: <span class="prelude-ty">Option</span>&lt;Instant&gt;,
+    rot_separator: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
 <span class="kw">impl </span>Formatter <span class="kw">for </span>StrFormatter {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
         <span class="kw">match </span>val {
             Value::Text(text) =&gt; {
-                <span class="kw">let </span>width = text.chars().count();
+                <span class="kw">let </span>text: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = text.graphemes(<span class="bool-val">true</span>).collect();
+                <span class="kw">let </span>width = text.len();
                 <span class="prelude-val">Ok</span>(<span class="kw">match </span>(<span class="self">self</span>.rot_interval_ms, <span class="self">self</span>.init_time) {
                     (<span class="prelude-val">Some</span>(rot_interval_ms), <span class="prelude-val">Some</span>(init_time)) <span class="kw">if </span>width &gt; <span class="self">self</span>.max_width =&gt; {
-                        <span class="kw">let </span>width = width + <span class="number">1</span>; <span class="comment">// Now we include &#39;|&#39; at the end
+                        <span class="kw">let </span>rot_separator: Vec&lt;<span class="kw-2">&amp;</span>str&gt; = <span class="self">self
+                            </span>.rot_separator
+                            .as_deref()
+                            .unwrap_or(<span class="string">&quot;|&quot;</span>)
+                            .graphemes(<span class="bool-val">true</span>)
+                            .collect();
+                        <span class="kw">let </span>width = width + rot_separator.len(); <span class="comment">// Now we include `rot_separator` at the end
                         </span><span class="kw">let </span>step = (init_time.elapsed().as_millis() <span class="kw">as </span>u64 / rot_interval_ms)
                             <span class="kw">as </span>usize
                             % width;
                         <span class="kw">let </span>w1 = <span class="self">self</span>.max_width.min(width - step);
-                        text.chars()
-                            .chain(<span class="prelude-val">Some</span>(<span class="string">&#39;|&#39;</span>))
+                        text.iter()
+                            .chain(rot_separator.iter())
                             .skip(step)
                             .take(w1)
-                            .chain(text.chars())
+                            .chain(text.iter())
                             .take(<span class="self">self</span>.max_width)
                             .collect_pango_escaped()
                     }
                     <span class="kw">_ </span>=&gt; text
-                        .chars()
-                        .chain(repeat(<span class="string">&#39; &#39;</span>).take(<span class="self">self</span>.min_width.saturating_sub(width)))
+                        .iter()
+                        .chain(repeat(<span class="kw-2">&amp;</span><span class="string">&quot; &quot;</span>).take(<span class="self">self</span>.min_width.saturating_sub(width)))
                         .take(<span class="self">self</span>.max_width)
                         .collect_pango_escaped(),
                 })
             }
-            Value::Icon(icon) =&gt; <span class="prelude-val">Ok</span>(icon.clone()), <span class="comment">// No escaping
-            </span>other =&gt; <span class="prelude-val">Err</span>(Error::new_format(<span class="macro">format!</span>(
+            Value::Icon(icon, value) =&gt; config.get_icon(icon, <span class="kw-2">*</span>value),
+            other =&gt; <span class="prelude-val">Err</span>(Error::new_format(<span class="macro">format!</span>(
                 <span class="string">&quot;{} cannot be formatted with &#39;str&#39; formatter&quot;</span>,
                 other.type_name(),
             ))),
@@ -737,10 +944,11 @@
 </span><span class="kw">pub struct </span>PangoStrFormatter;
 
 <span class="kw">impl </span>Formatter <span class="kw">for </span>PangoStrFormatter {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
         <span class="kw">match </span>val {
-            Value::Text(x) | Value::Icon(x) =&gt; <span class="prelude-val">Ok</span>(x.clone()), <span class="comment">// No escaping
-            </span>other =&gt; <span class="prelude-val">Err</span>(Error::new_format(<span class="macro">format!</span>(
+            Value::Text(x) =&gt; <span class="prelude-val">Ok</span>(x.clone()), <span class="comment">// No escaping
+            </span>Value::Icon(icon, value) =&gt; config.get_icon(icon, <span class="kw-2">*</span>value),
+            other =&gt; <span class="prelude-val">Err</span>(Error::new_format(<span class="macro">format!</span>(
                 <span class="string">&quot;{} cannot be formatted with &#39;str&#39; formatter&quot;</span>,
                 other.type_name(),
             ))),
@@ -752,24 +960,36 @@
 </span><span class="kw">pub struct </span>BarFormatter {
     width: usize,
     max_value: f64,
+    vertical: bool,
 }
 
-<span class="kw">const </span>VERTICAL_BAR_CHARS: [char; <span class="number">9</span>] = [
+<span class="kw">const </span>HORIZONTAL_BAR_CHARS: [char; <span class="number">9</span>] = [
     <span class="string">&#39; &#39;</span>, <span class="string">&#39;\u{258f}&#39;</span>, <span class="string">&#39;\u{258e}&#39;</span>, <span class="string">&#39;\u{258d}&#39;</span>, <span class="string">&#39;\u{258c}&#39;</span>, <span class="string">&#39;\u{258b}&#39;</span>, <span class="string">&#39;\u{258a}&#39;</span>, <span class="string">&#39;\u{2589}&#39;</span>,
     <span class="string">&#39;\u{2588}&#39;</span>,
 ];
 
+<span class="kw">const </span>VERTICAL_BAR_CHARS: [char; <span class="number">9</span>] = [
+    <span class="string">&#39; &#39;</span>, <span class="string">&#39;\u{2581}&#39;</span>, <span class="string">&#39;\u{2582}&#39;</span>, <span class="string">&#39;\u{2583}&#39;</span>, <span class="string">&#39;\u{2584}&#39;</span>, <span class="string">&#39;\u{2585}&#39;</span>, <span class="string">&#39;\u{2586}&#39;</span>, <span class="string">&#39;\u{2587}&#39;</span>,
+    <span class="string">&#39;\u{2588}&#39;</span>,
+];
+
 <span class="kw">impl </span>Formatter <span class="kw">for </span>BarFormatter {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, _config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
         <span class="kw">match </span>val {
             Value::Number { <span class="kw-2">mut </span>val, .. } =&gt; {
                 val = (val / <span class="self">self</span>.max_value).clamp(<span class="number">0.</span>, <span class="number">1.</span>);
-                <span class="kw">let </span>chars_to_fill = val * <span class="self">self</span>.width <span class="kw">as </span>f64;
-                <span class="prelude-val">Ok</span>((<span class="number">0</span>..<span class="self">self</span>.width)
-                    .map(|i| {
-                        VERTICAL_BAR_CHARS[((chars_to_fill - i <span class="kw">as </span>f64).clamp(<span class="number">0.</span>, <span class="number">1.</span>) * <span class="number">8.</span>) <span class="kw">as </span>usize]
-                    })
-                    .collect())
+                <span class="kw">if </span><span class="self">self</span>.vertical {
+                    <span class="kw">let </span>vert_char = VERTICAL_BAR_CHARS[(val * <span class="number">8.</span>) <span class="kw">as </span>usize];
+                    <span class="prelude-val">Ok</span>((<span class="number">0</span>..<span class="self">self</span>.width).map(|<span class="kw">_</span>| vert_char).collect())
+                } <span class="kw">else </span>{
+                    <span class="kw">let </span>chars_to_fill = val * <span class="self">self</span>.width <span class="kw">as </span>f64;
+                    <span class="prelude-val">Ok</span>((<span class="number">0</span>..<span class="self">self</span>.width)
+                        .map(|i| {
+                            HORIZONTAL_BAR_CHARS
+                                [((chars_to_fill - i <span class="kw">as </span>f64).clamp(<span class="number">0.</span>, <span class="number">1.</span>) * <span class="number">8.</span>) <span class="kw">as </span>usize]
+                        })
+                        .collect())
+                }
             }
             other =&gt; <span class="prelude-val">Err</span>(Error::new_format(<span class="macro">format!</span>(
                 <span class="string">&quot;{} cannot be formatted with &#39;bar&#39; formatter&quot;</span>,
@@ -882,9 +1102,14 @@
 </span><span class="kw">pub struct </span>EngFormatter(EngFixConfig);
 
 <span class="kw">impl </span>Formatter <span class="kw">for </span>EngFormatter {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, _config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
         <span class="kw">match </span>val {
             Value::Number { <span class="kw-2">mut </span>val, <span class="kw-2">mut </span>unit } =&gt; {
+                <span class="kw">let </span>is_negative = val.is_sign_negative();
+                <span class="kw">if </span>is_negative {
+                    val = -val;
+                }
+
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(new_unit) = <span class="self">self</span>.<span class="number">0</span>.unit {
                     val = unit.convert(val, new_unit)<span class="question-mark">?</span>;
                     unit = new_unit;
@@ -905,15 +1130,21 @@
                     .clamp(min_prefix, max_prefix);
                 val = prefix.apply(val);
 
-                <span class="kw">let </span><span class="kw-2">mut </span>digits = (val.max(<span class="number">1.</span>).log10().floor() + <span class="number">1.0</span>) <span class="kw">as </span>isize;
-                <span class="kw">if </span>val &lt; <span class="number">0. </span>{
-                    digits += <span class="number">1</span>;
+                <span class="kw">let </span><span class="kw-2">mut </span>digits = (val.max(<span class="number">1.</span>).log10().floor() + <span class="number">1.0</span>) <span class="kw">as </span>i32 + is_negative <span class="kw">as </span>i32;
+
+                <span class="comment">// handle rounding
+                </span><span class="kw">if </span><span class="self">self</span>.<span class="number">0</span>.width <span class="kw">as </span>i32 - digits &gt;= <span class="number">1 </span>{
+                    <span class="kw">let </span>round_up_to = <span class="self">self</span>.<span class="number">0</span>.width <span class="kw">as </span>i32 - digits - <span class="number">1</span>;
+                    <span class="kw">let </span>m = <span class="number">10f64</span>.powi(round_up_to);
+                    val = (val * m).round() / m;
+                    digits = (val.max(<span class="number">1.</span>).log10().floor() + <span class="number">1.0</span>) <span class="kw">as </span>i32 + is_negative <span class="kw">as </span>i32;
                 }
 
-                <span class="kw">let </span><span class="kw-2">mut </span>retval = <span class="kw">match </span><span class="self">self</span>.<span class="number">0</span>.width <span class="kw">as </span>isize - digits {
-                    isize::MIN..=<span class="number">0 </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, val.floor()),
-                    <span class="number">1 </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>.pad_with, val.floor() <span class="kw">as </span>i64),
-                    rest =&gt; <span class="macro">format!</span>(<span class="string">&quot;{:.*}&quot;</span>, rest <span class="kw">as </span>usize - <span class="number">1</span>, val),
+                <span class="kw">let </span>sign = <span class="kw">if </span>is_negative { <span class="string">&quot;-&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;&quot; </span>};
+                <span class="kw">let </span><span class="kw-2">mut </span>retval = <span class="kw">match </span><span class="self">self</span>.<span class="number">0</span>.width <span class="kw">as </span>i32 - digits {
+                    i32::MIN..=<span class="number">0 </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;{sign}{}&quot;</span>, val.round()),
+                    <span class="number">1 </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;{}{sign}{}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>.pad_with, val.round() <span class="kw">as </span>i64),
+                    rest =&gt; <span class="macro">format!</span>(<span class="string">&quot;{sign}{val:.*}&quot;</span>, rest <span class="kw">as </span>usize - <span class="number">1</span>),
                 };
 
                 <span class="kw">let </span>display_prefix = !<span class="self">self</span>.<span class="number">0</span>.prefix_hidden
@@ -948,7 +1179,7 @@
 </span><span class="kw">pub struct </span>FixFormatter(EngFixConfig);
 
 <span class="kw">impl </span>Formatter <span class="kw">for </span>FixFormatter {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, _config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
         <span class="kw">match </span>val {
             Value::Number {
                 ..
@@ -1000,7 +1231,7 @@
 }
 
 <span class="kw">impl </span>Formatter <span class="kw">for </span>DatetimeFormatter {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, _config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
         <span class="kw">match </span>val {
             Value::Datetime(datetime, timezone) =&gt; <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self</span>.locale {
                 <span class="prelude-val">Some</span>(locale) =&gt; <span class="kw">match </span>timezone {
@@ -1033,7 +1264,7 @@
 </span><span class="kw">pub struct </span>FlagFormatter;
 
 <span class="kw">impl </span>Formatter <span class="kw">for </span>FlagFormatter {
-    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
+    <span class="kw">fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>, val: <span class="kw-2">&amp;</span>Value, _config: <span class="kw-2">&amp;</span>SharedConfig) -&gt; <span class="prelude-ty">Result</span>&lt;String&gt; {
         <span class="kw">match </span>val {
             Value::Flag =&gt; <span class="prelude-val">Ok</span>(String::new()),
             <span class="kw">_ </span>=&gt; {
@@ -1042,5 +1273,127 @@
         }
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.1 (8460ca823 2023-03-20)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use super</span>::<span class="kw-2">*</span>;
+
+    <span class="macro">macro_rules! </span>fmt {
+    (<span class="macro-nonterminal">$name</span>:ident, $(<span class="macro-nonterminal">$key</span>:ident : <span class="macro-nonterminal">$value</span>:tt),<span class="kw-2">*</span>) =&gt; {
+        new_formatter(<span class="macro">stringify!</span>(<span class="macro-nonterminal">$name</span>), <span class="kw-2">&amp;</span>[
+            $( Arg { key: <span class="macro">stringify!</span>(<span class="macro-nonterminal">$key</span>), val: <span class="macro">stringify!</span>(<span class="macro-nonterminal">$value</span>) } ),*
+        ]).unwrap()
+    };
+}
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>eng_rounding_and_negatives() {
+        <span class="kw">let </span>fmt = <span class="macro">fmt!</span>(eng, w: <span class="number">3</span>);
+        <span class="kw">let </span>config = SharedConfig::default();
+
+        <span class="kw">let </span>result = fmt
+            .format(
+                <span class="kw-2">&amp;</span>Value::Number {
+                    val: -<span class="number">1.0</span>,
+                    unit: Unit::None,
+                },
+                <span class="kw-2">&amp;</span>config,
+            )
+            .unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot; -1&quot;</span>);
+
+        <span class="kw">let </span>result = fmt
+            .format(
+                <span class="kw-2">&amp;</span>Value::Number {
+                    val: <span class="number">9.9999</span>,
+                    unit: Unit::None,
+                },
+                <span class="kw-2">&amp;</span>config,
+            )
+            .unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot; 10&quot;</span>);
+
+        <span class="kw">let </span>result = fmt
+            .format(
+                <span class="kw-2">&amp;</span>Value::Number {
+                    val: <span class="number">999.9</span>,
+                    unit: Unit::Bytes,
+                },
+                <span class="kw-2">&amp;</span>config,
+            )
+            .unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot;1.0KB&quot;</span>);
+
+        <span class="kw">let </span>result = fmt
+            .format(
+                <span class="kw-2">&amp;</span>Value::Number {
+                    val: -<span class="number">9.99</span>,
+                    unit: Unit::None,
+                },
+                <span class="kw-2">&amp;</span>config,
+            )
+            .unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot;-10&quot;</span>);
+
+        <span class="kw">let </span>result = fmt
+            .format(
+                <span class="kw-2">&amp;</span>Value::Number {
+                    val: <span class="number">9.94</span>,
+                    unit: Unit::None,
+                },
+                <span class="kw-2">&amp;</span>config,
+            )
+            .unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot;9.9&quot;</span>);
+
+        <span class="kw">let </span>result = fmt
+            .format(
+                <span class="kw-2">&amp;</span>Value::Number {
+                    val: <span class="number">9.95</span>,
+                    unit: Unit::None,
+                },
+                <span class="kw-2">&amp;</span>config,
+            )
+            .unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot; 10&quot;</span>);
+
+        <span class="kw">let </span>fmt = <span class="macro">fmt!</span>(eng, w: <span class="number">5</span>, p: <span class="number">1</span>);
+        <span class="kw">let </span>result = fmt
+            .format(
+                <span class="kw-2">&amp;</span>Value::Number {
+                    val: <span class="number">321_600_000_000.</span>,
+                    unit: Unit::Bytes,
+                },
+                <span class="kw-2">&amp;</span>config,
+            )
+            .unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot;321.6GB&quot;</span>);
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>eng_prefixes() {
+        <span class="kw">let </span>config = SharedConfig::default();
+        <span class="comment">// 14.96 GiB
+        </span><span class="kw">let </span>val = Value::Number {
+            val: <span class="number">14.96 </span>* <span class="number">1024. </span>* <span class="number">1024. </span>* <span class="number">1024.</span>,
+            unit: Unit::Bytes,
+        };
+
+        <span class="kw">let </span>fmt = <span class="macro">fmt!</span>(eng, w: <span class="number">5</span>, p: Mi);
+        <span class="kw">let </span>result = fmt.format(<span class="kw-2">&amp;</span>val, <span class="kw-2">&amp;</span>config).unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot;14.96GiB&quot;</span>);
+
+        <span class="kw">let </span>fmt = <span class="macro">fmt!</span>(eng, w: <span class="number">4</span>, p: Mi);
+        <span class="kw">let </span>result = fmt.format(<span class="kw-2">&amp;</span>val, <span class="kw-2">&amp;</span>config).unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot;15.0GiB&quot;</span>);
+
+        <span class="kw">let </span>fmt = <span class="macro">fmt!</span>(eng, w: <span class="number">3</span>, p: Mi);
+        <span class="kw">let </span>result = fmt.format(<span class="kw-2">&amp;</span>val, <span class="kw-2">&amp;</span>config).unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot; 15GiB&quot;</span>);
+
+        <span class="kw">let </span>fmt = <span class="macro">fmt!</span>(eng, w: <span class="number">2</span>, p: Mi);
+        <span class="kw">let </span>result = fmt.format(<span class="kw-2">&amp;</span>val, <span class="kw-2">&amp;</span>config).unwrap();
+        <span class="macro">assert_eq!</span>(result, <span class="string">&quot;15GiB&quot;</span>);
+    }
+}
+</code></pre></div></section></main></body></html>

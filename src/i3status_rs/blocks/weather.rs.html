@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/weather.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>weather.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/weather.rs`."><title>weather.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.1 (d5c2e9c34 2023-09-13)" data-channel="1.72.1" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -337,21 +337,7 @@
 <a href="#337" id="337">337</a>
 <a href="#338" id="338">338</a>
 <a href="#339" id="339">339</a>
-<a href="#340" id="340">340</a>
-<a href="#341" id="341">341</a>
-<a href="#342" id="342">342</a>
-<a href="#343" id="343">343</a>
-<a href="#344" id="344">344</a>
-<a href="#345" id="345">345</a>
-<a href="#346" id="346">346</a>
-<a href="#347" id="347">347</a>
-<a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-</pre><pre class="rust"><code><span class="doccomment">//! Current weather
+</pre></div><pre class="rust"><code><span class="doccomment">//! Current weather
 //!
 //! This block displays local weather and temperature information. In order to use this block, you
 //! will need access to a supported weather API service. At the time of writing, OpenWeatherMap and
@@ -435,33 +421,42 @@
 //!
 //! # Used Icons
 //!
-//! - `weather_sun` (when weather is reported as &quot;Clear&quot;)
-//! - `weather_rain` (when weather is reported as &quot;Rain&quot; or &quot;Drizzle&quot;)
-//! - `weather_clouds` (when weather is reported as &quot;Clouds&quot;, &quot;Fog&quot; or &quot;Mist&quot;)
-//! - `weather_thunder` (when weather is reported as &quot;Thunderstorm&quot;)
+//! - `weather_sun` (when weather is reported as &quot;Clear&quot; during the day)
+//! - `weather_moon` (when weather is reported as &quot;Clear&quot; at night)
+//! - `weather_clouds` (when weather is reported as &quot;Clouds&quot; during the day)
+//! - `weather_clouds_night` (when weather is reported as &quot;Clouds&quot; at night)
+//! - `weather_fog` (when weather is reported as &quot;Fog&quot; or &quot;Mist&quot; during the day)
+//! - `weather_fog_night` (when weather is reported as &quot;Fog&quot; or &quot;Mist&quot; at night)
+//! - `weather_rain` (when weather is reported as &quot;Rain&quot; or &quot;Drizzle&quot; during the day)
+//! - `weather_rain_night` (when weather is reported as &quot;Rain&quot; or &quot;Drizzle&quot; at night)
 //! - `weather_snow` (when weather is reported as &quot;Snow&quot;)
-//! - `weather_default` (in all other cases)
+//! - `weather_thunder` (when weather is reported as &quot;Thunderstorm&quot; during the day)
+//! - `weather_thunder_night` (when weather is reported as &quot;Thunderstorm&quot; at night)
 
 </span><span class="kw">use </span>std::fmt;
-<span class="kw">use </span>std::sync::Arc;
+<span class="kw">use </span>std::sync::{Arc, Mutex};
+<span class="kw">use </span>std::time::Instant;
 
 <span class="kw">use </span><span class="kw">super</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">mod </span>met_no;
-<span class="kw">mod </span>open_weather_map;
+<span class="kw">pub mod </span>met_no;
+<span class="kw">pub mod </span>open_weather_map;
 
 <span class="kw">const </span>IP_API_URL: <span class="kw-2">&amp;</span>str = <span class="string">&quot;https://ipapi.co/json&quot;</span>;
 
+<span class="kw">static </span>LAST_AUTOLOCATE: Mutex&lt;<span class="prelude-ty">Option</span>&lt;AutolocateResult&gt;&gt; = Mutex::new(<span class="prelude-val">None</span>);
+
 <span class="attr">#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
 </span><span class="kw">pub struct </span>Config {
     <span class="attr">#[serde(default = <span class="string">&quot;default_interval&quot;</span>)]
-    </span>interval: Seconds,
+    </span><span class="kw">pub </span>interval: Seconds,
     <span class="attr">#[serde(default)]
-    </span>format: FormatConfig,
-    service: WeatherService,
+    </span><span class="kw">pub </span>format: FormatConfig,
+    <span class="kw">pub </span>service: WeatherService,
     <span class="attr">#[serde(default)]
-    </span>autolocate: bool,
-    autolocate_interval: <span class="prelude-ty">Option</span>&lt;Seconds&gt;,
+    </span><span class="kw">pub </span>autolocate: bool,
+    <span class="kw">pub </span>autolocate_interval: <span class="prelude-ty">Option</span>&lt;Seconds&gt;,
 }
 
 <span class="kw">fn </span>default_interval() -&gt; Seconds {
@@ -476,28 +471,36 @@
 
 <span class="attr">#[derive(Deserialize, Debug)]
 #[serde(tag = <span class="string">&quot;name&quot;</span>, rename_all = <span class="string">&quot;lowercase&quot;</span>)]
-</span><span class="kw">enum </span>WeatherService {
+</span><span class="kw">pub enum </span>WeatherService {
     OpenWeatherMap(open_weather_map::Config),
     MetNo(met_no::Config),
 }
 
-<span class="kw">enum </span>WeatherIcon {
-    Sun,
-    Rain,
-    Clouds,
-    Thunder,
+<span class="attr">#[derive(Clone, Copy)]
+</span><span class="kw">enum </span>WeatherIcon {
+    Clear { is_night: bool },
+    Clouds { is_night: bool },
+    Fog { is_night: bool },
+    Rain { is_night: bool },
     Snow,
+    Thunder { is_night: bool },
     Default,
 }
 
 <span class="kw">impl </span>WeatherIcon {
-    <span class="kw">fn </span>to_icon_str(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
+    <span class="kw">fn </span>to_icon_str(<span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str {
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::Sun =&gt; <span class="string">&quot;weather_sun&quot;</span>,
-            <span class="self">Self</span>::Rain =&gt; <span class="string">&quot;weather_rain&quot;</span>,
-            <span class="self">Self</span>::Clouds =&gt; <span class="string">&quot;weather_clouds&quot;</span>,
-            <span class="self">Self</span>::Thunder =&gt; <span class="string">&quot;weather_thunder&quot;</span>,
+            <span class="self">Self</span>::Clear { is_night: <span class="bool-val">false </span>} =&gt; <span class="string">&quot;weather_sun&quot;</span>,
+            <span class="self">Self</span>::Clear { is_night: <span class="bool-val">true </span>} =&gt; <span class="string">&quot;weather_moon&quot;</span>,
+            <span class="self">Self</span>::Clouds { is_night: <span class="bool-val">false </span>} =&gt; <span class="string">&quot;weather_clouds&quot;</span>,
+            <span class="self">Self</span>::Clouds { is_night: <span class="bool-val">true </span>} =&gt; <span class="string">&quot;weather_clouds_night&quot;</span>,
+            <span class="self">Self</span>::Fog { is_night: <span class="bool-val">false </span>} =&gt; <span class="string">&quot;weather_fog&quot;</span>,
+            <span class="self">Self</span>::Fog { is_night: <span class="bool-val">true </span>} =&gt; <span class="string">&quot;weather_fog_night&quot;</span>,
+            <span class="self">Self</span>::Rain { is_night: <span class="bool-val">false </span>} =&gt; <span class="string">&quot;weather_rain&quot;</span>,
+            <span class="self">Self</span>::Rain { is_night: <span class="bool-val">true </span>} =&gt; <span class="string">&quot;weather_rain_night&quot;</span>,
             <span class="self">Self</span>::Snow =&gt; <span class="string">&quot;weather_snow&quot;</span>,
+            <span class="self">Self</span>::Thunder { is_night: <span class="bool-val">false </span>} =&gt; <span class="string">&quot;weather_thunder&quot;</span>,
+            <span class="self">Self</span>::Thunder { is_night: <span class="bool-val">true </span>} =&gt; <span class="string">&quot;weather_thunder_night&quot;</span>,
             <span class="self">Self</span>::Default =&gt; <span class="string">&quot;weather_default&quot;</span>,
         }
     }
@@ -517,9 +520,9 @@
 }
 
 <span class="kw">impl </span>WeatherResult {
-    <span class="kw">fn </span>into_values(<span class="self">self</span>, api: <span class="kw-2">&amp;</span>CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;Values&gt; {
-        <span class="prelude-val">Ok</span>(<span class="macro">map! </span>{
-            <span class="string">&quot;icon&quot; </span>=&gt; Value::icon(api.get_icon(<span class="self">self</span>.icon.to_icon_str())<span class="question-mark">?</span>),
+    <span class="kw">fn </span>into_values(<span class="self">self</span>) -&gt; Values {
+        <span class="macro">map! </span>{
+            <span class="string">&quot;icon&quot; </span>=&gt; Value::icon(<span class="self">self</span>.icon.to_icon_str()),
             <span class="string">&quot;location&quot; </span>=&gt; Value::text(<span class="self">self</span>.location),
             <span class="string">&quot;temp&quot; </span>=&gt; Value::degrees(<span class="self">self</span>.temp),
             <span class="string">&quot;apparent&quot; </span>=&gt; Value::degrees(<span class="self">self</span>.apparent),
@@ -529,94 +532,38 @@
             <span class="string">&quot;wind&quot; </span>=&gt; Value::number(<span class="self">self</span>.wind),
             <span class="string">&quot;wind_kmh&quot; </span>=&gt; Value::number(<span class="self">self</span>.wind_kmh),
             <span class="string">&quot;direction&quot; </span>=&gt; Value::text(<span class="self">self</span>.wind_direction),
-        })
+        }
     }
 }
 
-<span class="kw">pub async fn </span>run(config: Config, <span class="kw-2">mut </span>api: CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>widget =
-        Widget::new().with_format(config.format.with_default(<span class="string">&quot; $icon $weather $temp &quot;</span>)<span class="question-mark">?</span>);
+<span class="kw">pub async fn </span>run(config: <span class="kw-2">&amp;</span>Config, api: <span class="kw-2">&amp;</span>CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
+    <span class="kw">let </span>format = config.format.with_default(<span class="string">&quot; $icon $weather $temp &quot;</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>provider: Box&lt;<span class="kw">dyn </span>WeatherProvider + Send + Sync&gt; = <span class="kw">match </span>config.service {
-        WeatherService::MetNo(config) =&gt; Box::new(met_no::Service::new(<span class="kw-2">&amp;mut </span>api, config).<span class="kw">await</span><span class="question-mark">?</span>),
+    <span class="kw">let </span>provider: Box&lt;<span class="kw">dyn </span>WeatherProvider + Send + Sync&gt; = <span class="kw">match </span><span class="kw-2">&amp;</span>config.service {
+        WeatherService::MetNo(config) =&gt; Box::new(met_no::Service::new(config)<span class="question-mark">?</span>),
         WeatherService::OpenWeatherMap(config) =&gt; Box::new(open_weather_map::Service::new(config)),
     };
 
-    <span class="kw">if </span>config.autolocate {
-        <span class="comment">// The default behavior is to mirror `interval`
-        </span><span class="kw">let </span>autolocate_interval = <span class="kw">match </span>config.autolocate_interval {
-            <span class="prelude-val">Some</span>(s) =&gt; s,
-            <span class="prelude-val">None </span>=&gt; config.interval,
-        };
+    <span class="kw">let </span>autolocate_interval = config.autolocate_interval.unwrap_or(config.interval);
 
-        <span class="kw">if </span>autolocate_interval == config.interval {
-            <span class="comment">// In the case where `autolocate_interval` matches `interval` merge both actions.
-            </span><span class="kw">loop </span>{
-                <span class="kw">let </span>location = api.recoverable(find_ip_location).<span class="kw">await</span><span class="question-mark">?</span>;
-                <span class="kw">let </span>data = api
-                    .recoverable(|| provider.get_weather(<span class="prelude-val">Some</span>(location)))
-                    .<span class="kw">await</span><span class="question-mark">?</span>;
-                widget.set_values(data.into_values(<span class="kw-2">&amp;</span>api)<span class="question-mark">?</span>);
-                api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
-
-                <span class="macro">select! </span>{
-                    <span class="kw">_ </span>= sleep(config.interval.<span class="number">0</span>) =&gt; (),
-                    <span class="kw">_ </span>= api.wait_for_update_request() =&gt; (),
-                }
-            }
+    <span class="kw">loop </span>{
+        <span class="kw">let </span>location = <span class="kw">if </span>config.autolocate {
+            <span class="kw">let </span>fetch = || find_ip_location(autolocate_interval.<span class="number">0</span>);
+            <span class="prelude-val">Some</span>(fetch.retry(<span class="kw-2">&amp;</span>ExponentialBuilder::default()).<span class="kw">await</span><span class="question-mark">?</span>)
         } <span class="kw">else </span>{
-            <span class="comment">// Two timers, one to rerender the block and the other to update the location.
-            </span><span class="kw">let </span><span class="kw-2">mut </span>interval = config.interval.timer();
-            <span class="kw">let </span><span class="kw-2">mut </span>autolocate_interval = autolocate_interval.timer();
+            <span class="prelude-val">None
+        </span>};
 
-            <span class="comment">// Initial pass
-            </span><span class="kw">let </span><span class="kw-2">mut </span>location = api.recoverable(find_ip_location).<span class="kw">await</span><span class="question-mark">?</span>;
-            <span class="kw">let </span>data = api
-                .recoverable(|| provider.get_weather(<span class="prelude-val">Some</span>(location)))
-                .<span class="kw">await</span><span class="question-mark">?</span>;
-            widget.set_values(data.into_values(<span class="kw-2">&amp;</span>api)<span class="question-mark">?</span>);
-            api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let </span>fetch = || provider.get_weather(location);
+        <span class="kw">let </span>data = fetch.retry(<span class="kw-2">&amp;</span>ExponentialBuilder::default()).<span class="kw">await</span><span class="question-mark">?</span>;
 
-            <span class="kw">loop </span>{
-                <span class="macro">select! </span>{
-                    biased; <span class="comment">// if both timers `tick()` autolocate should run first
-                    </span><span class="kw">_ </span>= autolocate_interval.tick() =&gt; {
-                        location = api.recoverable(find_ip_location).<span class="kw">await</span><span class="question-mark">?</span>;
-                    }
-                    <span class="kw">_ </span>= interval.tick() =&gt; {
-                        <span class="kw">let </span>data = api
-                            .recoverable(|| provider.get_weather(<span class="prelude-val">Some</span>(location)))
-                            .<span class="kw">await</span><span class="question-mark">?</span>;
-                        widget.set_values(data.into_values(<span class="kw-2">&amp;</span>api)<span class="question-mark">?</span>);
-                        api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
-                    },
-                    <span class="comment">// On update request autolocate and update the block.
-                    </span><span class="kw">_ </span>= api.wait_for_update_request() =&gt; {
-                        location = api.recoverable(find_ip_location).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>widget = Widget::new().with_format(format.clone());
+        widget.set_values(data.into_values());
+        api.set_widget(widget)<span class="question-mark">?</span>;
 
-                        <span class="kw">let </span>data = api
-                            .recoverable(|| provider.get_weather(<span class="prelude-val">Some</span>(location)))
-                            .<span class="kw">await</span><span class="question-mark">?</span>;
-                        widget.set_values(data.into_values(<span class="kw-2">&amp;</span>api)<span class="question-mark">?</span>);
-                        api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
-
-                        <span class="comment">// both intervals should be reset after a manual sync
-                        </span>autolocate_interval.reset();
-                        interval.reset();
-                    },
-                }
-            }
-        }
-    } <span class="kw">else </span>{
-        <span class="kw">loop </span>{
-            <span class="kw">let </span>data = api.recoverable(|| provider.get_weather(<span class="prelude-val">None</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
-            widget.set_values(data.into_values(<span class="kw-2">&amp;</span>api)<span class="question-mark">?</span>);
-            api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
-
-            <span class="macro">select! </span>{
-                <span class="kw">_ </span>= sleep(config.interval.<span class="number">0</span>) =&gt; (),
-                <span class="kw">_ </span>= api.wait_for_update_request() =&gt; ()
-            }
+        <span class="macro">select! </span>{
+            <span class="kw">_ </span>= sleep(config.interval.<span class="number">0</span>) =&gt; (),
+            <span class="kw">_ </span>= api.wait_for_update_request() =&gt; ()
         }
     }
 }
@@ -635,8 +582,23 @@
     longitude: f64,
 }
 
+<span class="kw">struct </span>AutolocateResult {
+    location: Coordinates,
+    timestamp: Instant,
+}
+
 <span class="comment">// TODO: might be good to allow for different geolocation services to be used, similar to how we have `service` for the weather API
-</span><span class="kw">async fn </span>find_ip_location() -&gt; <span class="prelude-ty">Result</span>&lt;Coordinates&gt; {
+</span><span class="doccomment">/// No-op if last API call was made in the last `interval` seconds.
+</span><span class="kw">async fn </span>find_ip_location(interval: Duration) -&gt; <span class="prelude-ty">Result</span>&lt;Coordinates&gt; {
+    {
+        <span class="kw">let </span>guard = LAST_AUTOLOCATE.lock().unwrap();
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(cached) = <span class="kw-2">&amp;*</span>guard {
+            <span class="kw">if </span>cached.timestamp.elapsed() &lt; interval {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(cached.location);
+            }
+        }
+    }
+
     <span class="attr">#[derive(Deserialize)]
     </span><span class="kw">struct </span>ApiResponse {
         <span class="attr">#[serde(flatten)]
@@ -667,18 +629,28 @@
         .<span class="kw">await
         </span>.error(<span class="string">&quot;Failed while parsing location API result&quot;</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">if </span>response.error {
-        <span class="prelude-val">Err</span>(Error {
+    <span class="kw">let </span>location = <span class="kw">if </span>response.error {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(Error {
             kind: ErrorKind::Other,
             message: <span class="prelude-val">Some</span>(<span class="string">&quot;ipapi.co error&quot;</span>.into()),
             cause: <span class="prelude-val">Some</span>(Arc::new(response.reason)),
             block: <span class="prelude-val">None</span>,
-        })
+        });
     } <span class="kw">else </span>{
         response
             .location
-            .error(<span class="string">&quot;Failed while parsing location API result&quot;</span>)
+            .error(<span class="string">&quot;Failed while parsing location API result&quot;</span>)<span class="question-mark">?
+    </span>};
+
+    {
+        <span class="kw">let </span><span class="kw-2">mut </span>guard = LAST_AUTOLOCATE.lock().unwrap();
+        <span class="kw-2">*</span>guard = <span class="prelude-val">Some</span>(AutolocateResult {
+            location,
+            timestamp: Instant::now(),
+        });
     }
+
+    <span class="prelude-val">Ok</span>(location)
 }
 
 <span class="comment">// Convert wind direction in azimuth degrees to abbreviation names
@@ -704,5 +676,4 @@
     <span class="kw">let </span>water_vapor_pressure = humidity * <span class="number">0.06105 </span>* exponent.exp();
     temp + <span class="number">0.33 </span>* water_vapor_pressure - <span class="number">0.7 </span>* wind_speed - <span class="number">4.0
 </span>}
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.1 (8460ca823 2023-03-20)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

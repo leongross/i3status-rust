@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/apt.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>apt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-93196c7a1c3542a8.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-3367e395607fafc1.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/blocks/apt.rs`."><title>apt.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9bb858ba049f1f21.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.72.1 (d5c2e9c34 2023-09-13)" data-channel="1.72.1" data-search-js="search-f6292fe389d70017.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-0f8c037637f9eb3e.css" data-theme-dark-css="dark-1097f8e92a01e3cf.css" data-theme-ayu-css="ayu-614652228113ac93.css" ><script src="../../../static.files/storage-59fd9b8ccb335783.js"></script><script defer src="../../../static.files/source-script-106908c7a7964ba4.js"></script><script defer src="../../../source-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-0f8c037637f9eb3e.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-1097f8e92a01e3cf.css"><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../i3status_rs/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -228,8 +228,7 @@
 <a href="#228" id="228">228</a>
 <a href="#229" id="229">229</a>
 <a href="#230" id="230">230</a>
-<a href="#231" id="231">231</a>
-</pre><pre class="rust"><code><span class="doccomment">//! Pending updates available for your Debian/Ubuntu based system
+</pre></div><pre class="rust"><code><span class="doccomment">//! Pending updates available for your Debian/Ubuntu based system
 //!
 //! Behind the scenes this uses `apt`, and in order to run it without root privileges i3status-rust will create its own package database in `/tmp/i3rs-apt/` which may take up several MB or more. If you have a custom apt config then this block may not work as expected - in that case please open an issue.
 //!
@@ -289,21 +288,19 @@
 <span class="kw">use </span><span class="kw">super</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="attr">#[derive(Deserialize, Debug, SmartDefault)]
-#[serde(default)]
+#[serde(deny_unknown_fields, default)]
 </span><span class="kw">pub struct </span>Config {
     <span class="attr">#[default(<span class="number">600</span>.into())]
-    </span>interval: Seconds,
-    format: FormatConfig,
-    format_singular: FormatConfig,
-    format_up_to_date: FormatConfig,
-    warning_updates_regex: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    critical_updates_regex: <span class="prelude-ty">Option</span>&lt;String&gt;,
-    ignore_phased_updates: bool,
+    </span><span class="kw">pub </span>interval: Seconds,
+    <span class="kw">pub </span>format: FormatConfig,
+    <span class="kw">pub </span>format_singular: FormatConfig,
+    <span class="kw">pub </span>format_up_to_date: FormatConfig,
+    <span class="kw">pub </span>warning_updates_regex: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>critical_updates_regex: <span class="prelude-ty">Option</span>&lt;String&gt;,
+    <span class="kw">pub </span>ignore_phased_updates: bool,
 }
 
-<span class="kw">pub async fn </span>run(config: Config, <span class="kw-2">mut </span>api: CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>widget = Widget::new();
-
+<span class="kw">pub async fn </span>run(config: <span class="kw-2">&amp;</span>Config, api: <span class="kw-2">&amp;</span>CommonApi) -&gt; <span class="prelude-ty">Result</span>&lt;()&gt; {
     <span class="kw">let </span>format = config.format.with_default(<span class="string">&quot; $icon $count.eng(w:1) &quot;</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>format_singular = config
         .format_singular
@@ -355,6 +352,7 @@
         </span>.error(<span class="string">&quot;Failed to write to config file&quot;</span>)<span class="question-mark">?</span>;
 
     <span class="kw">loop </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>widget = Widget::new();
         <span class="kw">let </span>updates = get_updates_list(config_file).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let </span>count = get_update_count(config_file, config.ignore_phased_updates, <span class="kw-2">&amp;</span>updates).<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -365,15 +363,15 @@
         });
         widget.set_values(<span class="macro">map!</span>(
             <span class="string">&quot;count&quot; </span>=&gt; Value::number(count),
-            <span class="string">&quot;icon&quot; </span>=&gt; Value::icon(api.get_icon(<span class="string">&quot;update&quot;</span>)<span class="question-mark">?</span>)
+            <span class="string">&quot;icon&quot; </span>=&gt; Value::icon(<span class="string">&quot;update&quot;</span>),
         ));
 
         <span class="kw">let </span>warning = warning_updates_regex
             .as_ref()
-            .map_or(<span class="bool-val">false</span>, |regex| has_matching_update(<span class="kw-2">&amp;</span>updates, regex));
+            .is_some_and(|regex| has_matching_update(<span class="kw-2">&amp;</span>updates, regex));
         <span class="kw">let </span>critical = critical_updates_regex
             .as_ref()
-            .map_or(<span class="bool-val">false</span>, |regex| has_matching_update(<span class="kw-2">&amp;</span>updates, regex));
+            .is_some_and(|regex| has_matching_update(<span class="kw-2">&amp;</span>updates, regex));
         widget.state = <span class="kw">match </span>count {
             <span class="number">0 </span>=&gt; State::Idle,
             <span class="kw">_ </span>=&gt; {
@@ -387,7 +385,7 @@
             }
         };
 
-        api.set_widget(<span class="kw-2">&amp;</span>widget).<span class="kw">await</span><span class="question-mark">?</span>;
+        api.set_widget(widget)<span class="question-mark">?</span>;
 
         <span class="macro">select! </span>{
             <span class="kw">_ </span>= sleep(config.interval.<span class="number">0</span>) =&gt; (),
@@ -454,11 +452,10 @@
     )
     .error(<span class="string">&quot;Problem capturing apt-cache command output&quot;</span>)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>phased_regex = <span class="macro">regex!</span>(<span class="string">r#&quot;.*\(phased (\d+)%\).*&quot;#</span>);
+    <span class="kw">let </span>phased_regex = <span class="macro">regex!</span>(<span class="string">r&quot;.*\(phased (\d+)%\).*&quot;</span>);
     <span class="prelude-val">Ok</span>(<span class="kw">match </span>phased_regex.captures(<span class="kw-2">&amp;</span>output) {
         <span class="prelude-val">Some</span>(matches) =&gt; <span class="kw-2">&amp;</span>matches[<span class="number">1</span>] != <span class="string">&quot;100&quot;</span>,
         <span class="prelude-val">None </span>=&gt; <span class="bool-val">false</span>,
     })
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="i3status_rs" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.1 (8460ca823 2023-03-20)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-c3c521c753752a1a.js" data-settings-css="settings-08ddfdda51b8ee2e.css" ></div></body></html>
+</code></pre></div></section></main></body></html>
